@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const restaurants = require('../data');
+let currentRestaurantsId = 9;
 
 router.get('/', (req, res) => {
     res.json(restaurants);
@@ -15,11 +16,27 @@ router.get('/:id', (req, res) => {
 
 
 router.post('/', (req, res) => {
-    res.send('POST API');
+    currentRestaurantsId += 1;
+    // console.log(req.body);
+    const newRestaurant = {
+        id: currentRestaurantsId,
+        ...req.body
+    };
+    restaurants.push(newRestaurant);
+    res.json(newRestaurant);
 });
 
 router.put('/:id', (req, res) => {
-    res.send('PUT API');
+    const restaurantsID = Number.parseInt(req.params.id, 10);
+    const restaurantIndex = restaurants.findIndex((restaurants) => restaurants.id === restaurantsID);
+
+    const updateRestaurants = {
+        id: restaurantsID,
+        ...req.body
+    };
+    restaurants[restaurantIndex] = updateRestaurants;
+
+    res.json(updateRestaurants);
 });
 
 router.delete('/:id', (req, res) => {
